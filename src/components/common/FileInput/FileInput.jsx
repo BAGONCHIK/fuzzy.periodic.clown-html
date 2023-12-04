@@ -19,7 +19,7 @@ const FileInput = ({ className, id, onUploadFile }) => {
         className={s.fileInput}
         id={id}
         type="file"
-        accept=".png,.jpg,.jpeg, video/*"
+        accept=".png,.jpg,.jpeg, video/*, .webp"
         multiple={false}
         onChange={onUploadFile}
       />

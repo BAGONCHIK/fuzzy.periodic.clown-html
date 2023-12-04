@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import cx from 'classnames';
 import axios from 'axios';
@@ -6,17 +6,20 @@ import axios from 'axios';
 import Header from 'components/Header';
 import FileInput from 'components/FileInput';
 import { MediaPicture } from 'components/Picture';
+import { BASE_URL } from 'constants/vars';
 
 import s from './Photo.module.scss';
 
 const Photo = ({ className }) => {
   const [file, setFile] = useState(null);
+  const [outFile, setOutFile] = useState(null);
   const [progress, setProgress] = useState(0);
 
   const handleUploadFile = useCallback(
     e => {
       if (e.target.files && e.target.files.length > 0) {
         setFile(e.target.files[0]);
+        setOutFile(null);
       }
     },
     [file]
@@ -42,12 +45,29 @@ const Photo = ({ className }) => {
 
   const uploadDocumentsApi = payload => {
     const uploadConfig = {
+      headers: {
+        'Access-Control-Allow-Origin': '*',
+        'Content-Type': 'multipart/form-data',
+        'X-CSRFToken':
+          'EUyKQU2Bga6wvbL0Adkvg15lSGJ2aambxCzxavPyP8nRsmfjX0jWWJVoIHjdIFsl',
+        accept: 'application/json',
+      },
       onUploadProgress: progressEvent => payload.uploadFunc(progressEvent),
     };
     const formData = new FormData();
-    formData.append('file', file, file.name);
-    return axios.post(``, formData, uploadConfig);
+    formData.append('input_file', payload.file, payload.file.name);
+    return axios.post(`${BASE_URL}/api/photo/`, formData, uploadConfig);
   };
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const response = await uploadDocumentsApi({ file, uploadFunc });
+      setOutFile(`${BASE_URL}${response.data.output_file}`);
+    };
+    if (file) {
+      fetchData();
+    }
+  }, [file]);
 
   return (
     <div className={cx(s.root, className)}>
@@ -67,7 +87,9 @@ const Photo = ({ className }) => {
         />
         <MediaPicture
           className={s.image}
-          objSource={getPreview(file) || 'images/placeholder_image.png'}
+          objSource={
+            outFile || getPreview(file) || 'images/placeholder_image.png'
+          }
         />
       </div>
     </div>
