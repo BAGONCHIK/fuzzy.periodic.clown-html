@@ -1,0 +1,15 @@
+.uploadWrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.fileInput {
+  display: none;
+}
+
+.icon {
+  width: vw(32);
+  height: vw(30);
+}

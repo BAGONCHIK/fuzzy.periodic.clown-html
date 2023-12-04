@@ -2,12 +2,12 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import cx from 'classnames';
 import VideoPlayer from 'components/VideoPlayer';
-
-import s from './Home.module.scss';
 import Header from 'components/Header';
 import Lottie from 'lottie-react-web';
 import arrowLottie from 'images/arrowLottie.json';
 import Button from 'components/Button';
+
+import s from './Home.module.scss';
 
 const Home = ({ className }) => {
   return (

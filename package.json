@@ -10,7 +10,9 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "axios": "^1.6.2",
     "classnames": "^2.3.2",
+    "lodash": "^4.17.21",
     "lottie-react-web": "^2.2.2",
     "next": "13.4.12",
     "prop-types": "^15.8.1",
