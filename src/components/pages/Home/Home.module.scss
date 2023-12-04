@@ -1,0 +1,72 @@
+.root {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  min-height: get-real-vh(100);
+  background-color: black;
+  color: white;
+}
+
+.firstBlock {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: get-real-vh(100);
+
+  .video {
+    position: absolute;
+    top: 0;
+    width: 120%;
+    height: 120%;
+    opacity: 0.25;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .content {
+    margin-top: vw(80);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    z-index: 1;
+
+    .title {
+      width: vw(1000);
+
+      @include fontType(O);
+      font-size: clampSize(12, 92);
+      line-height: 1.1;
+      letter-spacing: -2.972px;
+      text-align: center;
+    }
+
+    .subContent {
+      margin-top: vw(80);
+
+      font-size: clampSize(12, 30);
+      line-height: 1;
+      text-align: center;
+    }
+
+    .arrow {
+      margin-top: vw(-20);
+      width: vw(100);
+      height: vw(120);
+    }
+
+    .btns {
+      display: flex;
+
+      .btn {
+        width: vw(90);
+        height: vw(40);
+        margin-right: vw(30);
+
+        &:last-child {
+          margin-right: vw(0);
+        }
+      }
+    }
+  }
+}

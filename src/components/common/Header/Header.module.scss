@@ -1,0 +1,35 @@
+.root {
+  position: fixed;
+  top: 0;
+  display: flex;
+  align-items: center;
+  width: 100%;
+  height: vw(70);
+  min-height: vw(70);
+  background-color: black;
+  z-index: 9999;
+  border-bottom: 1px solid white;
+}
+
+.logo {
+  width: vw(60);
+  height: vw(60);
+  max-width: vw(60);
+  max-height: vw(60);
+  margin-left: vw(20);
+}
+
+.nav {
+  display: flex;
+  margin: 0 vw(30) 0 auto;
+}
+
+.btn {
+  width: vw(90);
+  height: vw(40);
+  margin-right: vw(10);
+
+  &:last-child {
+    margin-right: vw(0);
+  }
+}

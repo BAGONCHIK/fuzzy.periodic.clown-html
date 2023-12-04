@@ -1,0 +1,13 @@
+@use "./mixins" as *;
+
+:root {
+  --gfs: 1440;
+
+  //@include media(smd, max) {
+  //  --gfs: 767;
+  //}
+
+  @include media(smd, max) {
+    --gfs: 375;
+  }
+}

@@ -1,0 +1,16 @@
+.root {
+  position: relative;
+}
+.styleType {
+  &-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    padding: vw(10) vw(15);
+    border: 2px solid white;
+    border-radius: 5px;
+    color: white;
+    font-size: clampSize(12, 16);
+  }
+}
