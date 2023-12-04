@@ -22,6 +22,11 @@
     opacity: 0.25;
     pointer-events: none;
     z-index: 0;
+
+    @include media(smd) {
+      width: 400%;
+      height: 120%;
+    }
   }
 
   .content {
@@ -39,6 +44,11 @@
       line-height: 1.1;
       letter-spacing: -2.972px;
       text-align: center;
+
+      @include media(smd) {
+        width: vw(335);
+        font-size: clampSize(12, 40);
+      }
     }
 
     .subContent {
@@ -47,6 +57,11 @@
       font-size: clampSize(12, 30);
       line-height: 1;
       text-align: center;
+
+      @include media(smd) {
+        width: vw(335);
+        font-size: clampSize(12, 20);
+      }
     }
 
     .arrow {
