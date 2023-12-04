@@ -1,0 +1,29 @@
+.root {
+  position: relative;
+  width: 100%;
+  border: 1px solid white;
+  border-radius: 10px;
+
+  .row {
+    display: flex;
+    width: 100%;
+    border-bottom: 1px solid white;
+
+    &:last-child {
+      border-bottom: none;
+    }
+
+    .colName {
+      width: 30%;
+      padding: vw(20);
+      border-right: 1px solid white;
+
+      text-transform: capitalize;
+    }
+
+    .colData {
+      width: 70%;
+      padding: vw(20);
+    }
+  }
+}

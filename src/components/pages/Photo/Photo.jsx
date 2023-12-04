@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import PropTypes from 'prop-types';
 import cx from 'classnames';
 import axios from 'axios';
@@ -9,11 +9,23 @@ import { MediaPicture } from 'components/Picture';
 import { BASE_URL } from 'constants/vars';
 
 import s from './Photo.module.scss';
+import Stats from 'components/Stats';
 
 const Photo = ({ className }) => {
   const [file, setFile] = useState(null);
   const [outFile, setOutFile] = useState(null);
+  const [outData, setOutData] = useState(null);
   const [progress, setProgress] = useState(0);
+
+  const stats = useMemo(() => {
+    const data = [];
+    if (outData) {
+      Object.keys(outData).forEach(key =>
+        data.push({ name: key, data: outData[key].length })
+      );
+    }
+    return data;
+  }, [outData]);
 
   const handleUploadFile = useCallback(
     e => {
@@ -63,6 +75,7 @@ const Photo = ({ className }) => {
     const fetchData = async () => {
       const response = await uploadDocumentsApi({ file, uploadFunc });
       setOutFile(`${BASE_URL}${response.data.output_file}`);
+      setOutData(response.data.additional_data);
     };
     if (file) {
       fetchData();
@@ -91,6 +104,12 @@ const Photo = ({ className }) => {
             outFile || getPreview(file) || 'images/placeholder_image.png'
           }
         />
+        {stats && stats.length > 0 && (
+          <Stats
+            data={stats}
+            className={s.stats}
+          />
+        )}
       </div>
     </div>
   );

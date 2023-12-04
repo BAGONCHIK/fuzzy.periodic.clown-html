@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import cx from 'classnames';
 import axios from 'axios';
@@ -6,17 +6,23 @@ import axios from 'axios';
 import Header from 'components/Header';
 import FileInput from 'components/FileInput';
 import { MediaPicture } from 'components/Picture';
+import VideoPlayer from 'components/VideoPlayer';
+import { BASE_URL } from 'constants/vars';
+import loadLottie from 'images/loadLottie.json';
 
 import s from './Video.module.scss';
-import VideoPlayer from 'components/VideoPlayer';
+import Lottie from 'lottie-react-web';
 
 const Video = ({ className }) => {
   const [file, setFile] = useState(null);
-  const [progress, setProgress] = useState(0);
+  const [outData, setOutData] = useState(null);
+  const [outFile, setOutFile] = useState(null);
+  const [isLoad, setIsLoad] = useState(false);
 
   const handleUploadFile = useCallback(
     e => {
       if (e.target.files && e.target.files.length > 0) {
+        setOutFile(null);
         setFile(e.target.files[0]);
       }
     },
@@ -31,24 +37,34 @@ const Video = ({ className }) => {
     return url;
   }, []);
 
-  const uploadFunc = useCallback(
-    progressEvent => {
-      const percentCompleted = Math.round(
-        (progressEvent.loaded * 100) / progressEvent.total
-      );
-      setProgress(percentCompleted);
-    },
-    [setProgress]
-  );
-
   const uploadDocumentsApi = payload => {
     const uploadConfig = {
-      onUploadProgress: progressEvent => payload.uploadFunc(progressEvent),
+      headers: {
+        'Access-Control-Allow-Origin': '*',
+        'Content-Type': 'multipart/form-data',
+        'X-CSRFToken':
+          'EUyKQU2Bga6wvbL0Adkvg15lSGJ2aambxCzxavPyP8nRsmfjX0jWWJVoIHjdIFsl',
+        accept: 'application/json',
+      },
+      // onUploadProgress: progressEvent => payload.uploadFunc(progressEvent),
     };
     const formData = new FormData();
-    formData.append('file', file, file.name);
-    return axios.post(``, formData, uploadConfig);
+    formData.append('input_file', payload.file, payload.file.name);
+    return axios.post(`${BASE_URL}/api/video/`, formData, uploadConfig);
   };
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const response = await uploadDocumentsApi({ file });
+      setOutFile(`${BASE_URL}${response.data.output_file}`);
+      setOutData(response.data.additional_data);
+      setIsLoad(false);
+    };
+    if (file) {
+      setIsLoad(true);
+      fetchData();
+    }
+  }, [file]);
 
   return (
     <div className={cx(s.root, className)}>
@@ -66,10 +82,10 @@ const Video = ({ className }) => {
           className={s.input}
           onUploadFile={handleUploadFile}
         />
-        {getPreview(file) ? (
+        {outFile || getPreview(file) ? (
           <VideoPlayer
             className={s.image}
-            url={getPreview(file)}
+            url={outFile || getPreview(file)}
           />
         ) : (
           <MediaPicture
@@ -78,6 +94,18 @@ const Video = ({ className }) => {
           />
         )}
       </div>
+      {isLoad && (
+        <div className={s.loader}>
+          <div className={s.loadText}>Processing</div>
+          <div className={s.loadIcon}>
+            <Lottie
+              options={{
+                animationData: loadLottie,
+              }}
+            />
+          </div>
+        </div>
+      )}
     </div>
   );
 };
