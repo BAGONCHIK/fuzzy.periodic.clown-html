@@ -3,10 +3,23 @@
   align-items: center;
   justify-content: center;
   cursor: pointer;
+  padding: vw(10) vw(20);
+
+  width: fit-content;
+
+  background-color: white;
+  color: black;
+  border: 1px solid black;
+  border-radius: 7px;
 }
 
 .fileInput {
   display: none;
+}
+
+.inputText {
+  margin-right: vw(20);
+  font-size: clampSize(12, 20);
 }
 
 .icon {

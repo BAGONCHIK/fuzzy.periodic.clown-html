@@ -1,14 +1,16 @@
 import React from 'react';
-
-import s from './FileInput.module.scss';
+import cn from 'classnames';
 import { MediaPicture } from 'components/Picture';
 
-const FileInput = ({ id, onUploadFile }) => {
+import s from './FileInput.module.scss';
+
+const FileInput = ({ className, id, onUploadFile }) => {
   return (
     <label
-      className={s.uploadWrapper}
+      className={cn(className, s.uploadWrapper)}
       htmlFor={id}
     >
+      <div className={s.inputText}>Загрузить файл</div>
       <MediaPicture
         objSource="images/attach.svg"
         className={s.icon}

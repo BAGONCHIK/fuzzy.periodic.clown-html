@@ -7,9 +7,10 @@ import Header from 'components/Header';
 import FileInput from 'components/FileInput';
 import { MediaPicture } from 'components/Picture';
 
-import s from './Photo.module.scss';
+import s from './Video.module.scss';
+import VideoPlayer from 'components/VideoPlayer';
 
-const Photo = ({ className }) => {
+const Video = ({ className }) => {
   const [file, setFile] = useState(null);
   const [progress, setProgress] = useState(0);
 
@@ -53,31 +54,38 @@ const Photo = ({ className }) => {
     <div className={cx(s.root, className)}>
       <Header />
       <div className={s.content}>
-        <div className={s.title}>Обработка фотографий</div>
+        <div className={s.title}>Обработка видео</div>
         <div className={s.subContent}>
-          В этом разделе Вам предоставляется возможность обработки изображений.
+          В этом разделе Вам предоставляется возможность обработки видео файлов.
           После успешной загрузки, начнется обработка, а Вы увидете загруженное
-          изображение ниже. По окончанию работы, изначальное фото заменится на
-          обработанное фото. Также под фото будет приведена статистика
-          обнаруженных объектов.
+          видео ниже. По окончанию работы, изначальное видео заменится на
+          обработанное. Также под видео будет приведена статистика обнаруженных
+          объектов.
         </div>
         <FileInput
           className={s.input}
           onUploadFile={handleUploadFile}
         />
-        <MediaPicture
-          className={s.image}
-          objSource={getPreview(file) || 'images/placeholder_image.png'}
-        />
+        {getPreview(file) ? (
+          <VideoPlayer
+            className={s.image}
+            url={getPreview(file)}
+          />
+        ) : (
+          <MediaPicture
+            className={s.image}
+            objSource={'images/placeholder_image.png'}
+          />
+        )}
       </div>
     </div>
   );
 };
 
-Photo.propTypes = {
+Video.propTypes = {
   className: PropTypes.string,
 };
 
-Photo.defaultProps = {};
+Video.defaultProps = {};
 
-export default React.memo(Photo);
+export default React.memo(Video);
