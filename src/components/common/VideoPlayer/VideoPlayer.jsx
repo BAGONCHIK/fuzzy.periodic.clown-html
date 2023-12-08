@@ -8,6 +8,7 @@ const VideoPlayer = ({
   loop = false,
   autoPlay = false,
   muted = false,
+  type = 'video/mp4',
 }) => {
   return (
     // eslint-disable-next-line jsx-a11y/media-has-caption
@@ -25,7 +26,7 @@ const VideoPlayer = ({
     >
       <source
         src={url}
-        type="video/mp4"
+        type={type}
       />
     </video>
   );

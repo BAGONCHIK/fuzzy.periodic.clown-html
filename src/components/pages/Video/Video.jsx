@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import PropTypes from 'prop-types';
 import cx from 'classnames';
 import axios from 'axios';
@@ -9,20 +9,31 @@ import { MediaPicture } from 'components/Picture';
 import VideoPlayer from 'components/VideoPlayer';
 import { BASE_URL } from 'constants/vars';
 import loadLottie from 'images/loadLottie.json';
+import Lottie from 'lottie-react-web';
+import Stats from 'components/Stats';
 
 import s from './Video.module.scss';
-import Lottie from 'lottie-react-web';
 
 const Video = ({ className }) => {
   const [file, setFile] = useState(null);
-  const [outData, setOutData] = useState(null);
+  const [outData, setOutData] = useState(false);
   const [outFile, setOutFile] = useState(null);
   const [isLoad, setIsLoad] = useState(false);
+
+  const stats = useMemo(() => {
+    const data = [];
+    if (outData) {
+      Object.keys(outData).forEach(key =>
+        data.push({ name: key, data: outData[key].length })
+      );
+    }
+    return data;
+  }, [outData]);
 
   const handleUploadFile = useCallback(
     e => {
       if (e.target.files && e.target.files.length > 0) {
-        setOutFile(null);
+        setOutFile(false);
         setFile(e.target.files[0]);
       }
     },
@@ -56,8 +67,25 @@ const Video = ({ className }) => {
   useEffect(() => {
     const fetchData = async () => {
       const response = await uploadDocumentsApi({ file });
-      setOutFile(`${BASE_URL}${response.data.output_file}`);
+      await fetch(`${BASE_URL}${response.data.output_file}`)
+        .then(response => {
+          if (!response.ok) {
+            throw new Error(response.statusText);
+          }
+          return response.blob();
+        })
+        .then(blob => {
+          const viewUrl = window.URL.createObjectURL(blob);
+          const link = document.createElement('a');
+          link.href = viewUrl;
+          link.download = 'result.mp4';
+          document.body.appendChild(link);
+          link.click();
+          link.remove();
+          window.URL.revokeObjectURL(viewUrl);
+        });
       setOutData(response.data.additional_data);
+      setOutFile(true);
       setIsLoad(false);
     };
     if (file) {
@@ -82,15 +110,23 @@ const Video = ({ className }) => {
           className={s.input}
           onUploadFile={handleUploadFile}
         />
-        {outFile || getPreview(file) ? (
+        {getPreview(file) ? (
           <VideoPlayer
             className={s.image}
-            url={outFile || getPreview(file)}
+            url={getPreview(file)}
+            type="video/mp4"
           />
         ) : (
           <MediaPicture
             className={s.image}
             objSource={'images/placeholder_image.png'}
+          />
+        )}
+        {outFile && <div className={s.subContent}>Файл скачен</div>}
+        {stats && stats.length > 0 && (
+          <Stats
+            data={stats}
+            className={s.stats}
           />
         )}
       </div>
